@@ -1179,7 +1179,7 @@ form label.error { float: none; color: #f00; font-size: 11px; display: block; te
 .pagination li a:hover { cursor: pointer; text-decoration: none; background: #eee; }
 .pagination li a.current { background: #FB9337; color: #fff; border: 1px solid #F0882C; }
 .pagination li.first a:active, .pagination li.previous a:active, .pagination li.next a:active, .pagination li.last a:active {
-	background: #333; color: #fff; border 1px solid #272727;
+	background: #333; color: #fff; border: 1px solid #272727;
 }
 .pagination li a.disable { color: #ccc; }
 .pagination li a.disable:hover { background: #f7f7f7; cursor: default; }

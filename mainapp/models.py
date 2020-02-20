@@ -130,6 +130,10 @@ class TSysUser(models.Model):
     nick_name = models.CharField(max_length=20, blank=True, null=True)
     role_id = models.IntegerField(blank=True, null=True)
 
+    @property
+    def role(self):
+        return TSysRole.objects.get(pk=self.role_id)
+
     class Meta:
         managed = False
         db_table = 't_sys_user'
