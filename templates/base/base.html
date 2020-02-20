@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>{% block title %}Admin{% endblock %}</title>
+
+    {% include 'base/css.html' %}
+    {% include 'base/js.html' %}
+
+    {% block css %}
+
+    {% endblock %}
+</head>
+<body class="withvernav">
+<div class="bodywrapper">
+    {% include 'base/top.html' %}
+    {% include 'base/menu.html' %}
+
+    {% block content %}
+
+    {% endblock %}
+
+</div><!--bodywrapper-->
+{% block js %}
+
+{% endblock %}
+
+</body>
+</html>
