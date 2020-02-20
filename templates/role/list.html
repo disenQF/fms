@@ -4,9 +4,6 @@
     系统角色管理
 {% endblock %}
 
-{% block css %}
-    <script type="text/javascript" src="/s/js/custom/tables.js"></script>
-{% endblock %}
 
 {% block content %}
 
@@ -22,10 +19,9 @@
             <div class="contenttitle2">
                 <h3>用户角色</h3>
             </div><!--contenttitle-->
-            <table cellpadding="0" cellspacing="0" border="0" class="stdtable" id="dyntable2">
+            <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
                 <thead>
                 <tr>
-                    <th class="head0 nosort"><input type="checkbox"/></th>
                     <th class="head0">角色ID</th>
                     <th class="head1">名称</th>
                     <th class="head0">代码</th>
@@ -36,16 +32,12 @@
                 <tbody>
                 {% for role in roles %}
                     <tr class="gradeA">
-                        <td align="center">
-                    <span class="center">
-                        <input type="checkbox" value="{{ role.id }}"/>
-                    </span></td>
                         <td>{{ role.id }}</td>
                         <td>{{ role.name }}</td>
                         <td>{{ role.code }}</td>
                         <td class="center">
-                            <button class="stdbtn">编辑</button>
-                            <button class="stdbtn btn_yellow">删除</button>
+                            <button class="stdbtn" onclick="edit_({{ role.id }})">编辑</button>
+                            <button class="stdbtn btn_yellow" onclick="delete_({{ role.id }}, '{{ role.name }}')">删除</button>
                         </td>
                     </tr>
                 {% endfor %}
@@ -53,9 +45,28 @@
                 </tbody>
             </table>
             <div style="padding: 5px">
-                <button class="stdbtn btn_blue">新增</button>
+                <button class="stdbtn btn_blue" onclick="window.open('/edit_role/', target='_self')">新增</button>
             </div>
         </div>
     </div>
 
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_(role_id, role_name) {
+            jConfirm('是否确认删除' + role_name + "?", '删除确认', function (event) {
+                if (event) {
+                    url = '?action=del&role_id=' + role_id
+                    console.log(url)
+                    open(url, target = '_self')
+                }
+            })
+        }
+
+        function edit_(role_id){
+            open('/edit_role/?role_id='+role_id, targt='_self')
+        }
+
+    </script>
 {% endblock %}

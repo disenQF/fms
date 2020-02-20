@@ -1,8 +1,10 @@
+import json
+
 from django.shortcuts import render, redirect
+from django.views import View
 
 from common import md5_
-from .models import TSysUser
-from .models import TUser
+from .models import TSysUser,TUser,TSysRole
 
 # Create your views here.
 def login(request):
@@ -64,6 +66,33 @@ def index(request):
 
 
 def role(request):
-    from .models import TSysRole
+    action = request.GET.get('action', '')
+    if action == 'del':
+        TSysRole.objects.get(pk=request.GET.get('role_id')).delete()
+
     roles = TSysRole.objects.all()
-    return render(request, 'role.html', locals())
+    return render(request, 'role/list.html', locals())
+
+
+class EditRoleView(View):
+    def get(self, request):
+        role_id = request.GET.get('role_id', '')
+        if role_id:
+            role = TSysRole.objects.get(pk=role_id)
+        return render(request, 'role/edit.html', locals())
+
+    def post(self, request):
+        from .forms import RoleForm
+        print(request.POST)
+        role_id = request.POST.get('id','')
+        if role_id:
+            form = RoleForm(request.POST, instance=TSysRole.objects.get(pk=role_id))
+        else:
+            form = RoleForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/role/')
+
+        errors = json.loads(form.errors.as_json())
+        return render(request, 'role/edit.html', locals())

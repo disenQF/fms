@@ -1,8 +1,8 @@
  <div class="vernav2 iconmenu">
     	<ul>
             {% if request.session.login_user.code == 'admin' %}
-                <li><a href="forms.html">系统配置</a></li>
-                <li><a href="#role_menu" class="editor">系统管理</a>
+                <li><a href="forms.html" class="widgets">系统配置</a></li>
+                <li><a href="#role_menu" class="support">系统管理</a>
                     <span class="arrow"></span>
                     <ul id="role_menu">
                         <li><a href="/role/">角色管理</a></li>
@@ -10,8 +10,8 @@
                         <li><a href="editor.html">菜单管理</a></li>
                     </ul>
                 </li>
-                <li><a href="elements.html" class="elements">公告管理</a></li>
-                <li><a href="elements.html" class="elements">信息审核</a></li>
+                <li><a href="elements.html" class="drafts">公告管理</a></li>
+                <li><a href="elements.html" class="inbox">信息审核</a></li>
             {% endif %}
 
         {% if request.session.login_user.code == 'mgr' %}

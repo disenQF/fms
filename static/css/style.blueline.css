@@ -57,7 +57,7 @@ form button { background-color: #319cff; border-color: #2286e2; }
 #popup_ok { background-color: #319cff; border-color: #2286e2; opacity: 0.8; }
 #popup_ok:hover { background-color: #319cff; border-color: #2286e2; opacity: 1; }
 .wizard .hormenu li a.selected span.h2, .wizard .hormenu li a.done span.h2 { color: #319cff; }
-.wizard .hormenu li a span.dot span { background-image: url(../images/blueline/steps.png); }
+.wizard .hormenu li a span.dot span { background-image: url(../images/blueline..teps.png); }
 .actionBar a { background-color: #319cff; border-color: #2286e2; }
 .wizard .tabbedmenu li a.selected span.h2, .wizard .tabbedmenu li a.selected span,
 .wizard .tabbedmenu li a.done span.h2, .wizard .tabbedmenu li a.done span{ color: #319cff; }

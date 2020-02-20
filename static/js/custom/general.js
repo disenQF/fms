@@ -335,12 +335,12 @@ jQuery(document).ready(function(){
 		var c = jQuery(this).attr('class');
 		if(jQuery('#addonstyle').length == 0) {
 			if(c != 'default') {
-				jQuery('head').append('<link id="addonstyle" rel="stylesheet" href="css/style.'+c+'.css" type="text/css" />');
+				jQuery('head').append('<link id="addonstyle" rel="stylesheet" href="/s/css/style.'+c+'.css" type="text/css" />');
 				jQuery.cookie("addonstyle", c, { path: '/' });
 			}
 		} else {
 			if(c != 'default') {
-				jQuery('#addonstyle').attr('href','css/style.'+c+'.css');
+				jQuery('#addonstyle').attr('href','/s/css/style.'+c+'.css');
 				jQuery.cookie("addonstyle", c, { path: '/' });
 			} else {
 				jQuery('#addonstyle').remove();	
@@ -353,7 +353,7 @@ jQuery(document).ready(function(){
 	if(jQuery.cookie('addonstyle')) {
 		var c = jQuery.cookie('addonstyle');
 		if(c != '') {
-			jQuery('head').append('<link id="addonstyle" rel="stylesheet" href="css/style.'+c+'.css" type="text/css" />');
+			jQuery('head').append('<link id="addonstyle" rel="stylesheet" href="/s/css/style.'+c+'.css" type="text/css" />');
 			jQuery.cookie("addonstyle", c, { path: '/' });
 		}
 	}

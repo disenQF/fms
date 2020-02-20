@@ -7,5 +7,6 @@ urlpatterns = [
     path('login/', views.login),
     path('logout/', views.logout),
     path('role/', views.role),
+    path('edit_role/', views.EditRoleView.as_view()),
     path('', views.index)
 ]

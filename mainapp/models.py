@@ -108,7 +108,7 @@ class TSysMenu(models.Model):
 
 class TSysRole(models.Model):
     name = models.CharField(unique=True, max_length=20)
-    code = models.CharField(unique=True, max_length=10, blank=True, null=True)
+    code = models.CharField(unique=True, max_length=10)
 
     class Meta:
         managed = False

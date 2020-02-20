@@ -1,7 +1,7 @@
 <div class="topheader">
         <div class="left">
-            <h1 class="logo">Ama.<span>Admin</span></h1>
-            <span class="slogan">后台管理系统</span>
+            <h1 class="logo">锋云<span>存储</span></h1>
+            <span class="slogan">管理系统</span>
 
             <div class="search">
             	<form action="" method="post">
@@ -15,9 +15,6 @@
         </div><!--left-->
 
         <div class="right">
-        	<!--<div class="notification">
-                <a class="count" href="ajax/notifications.html"><span>9</span></a>
-        	</div>-->
             <div class="userinfo">
             	<img id="head_small" src="{% if request.session.login_user.head %}/m/{{ request.session.login_user.head }}{% else %}/s/images/thumbs/avatar.png{% endif %}" alt="" />
                 <span>{{ request.session.login_user.name }}</span>
@@ -55,22 +52,25 @@
  <div class="header">
     	<ul class="headermenu">
         	<li class="current"><a href="dashboard.html"><span class="icon icon-flatscreen"></span>首页</a></li>
-            <li><a href="manageblog.html"><span class="icon icon-pencil"></span>博客管理</a></li>
             <li><a href="messages.html"><span class="icon icon-message"></span>查看消息</a></li>
-            <li><a href="reports.html"><span class="icon icon-chart"></span>统计报表</a></li>
+
+            {% if request.session.login_user.code == 'admin' or request.session.login_user.code == 'mgr' %}
+                 <li><a href="reports.html"><span class="icon icon-chart"></span>统计信息<span class="">1</span></a></li>
+            {% endif %}
         </ul>
 
        <div class="headerwidget">
         	<div class="earnings">
             	<div class="one_half">
-                	<h4>Today's Earnings</h4>
-                    <h2>$640.01</h2>
+                	<h4>已用空间</h4>
+                    <h2>110K</h2>
                 </div><!--one_half-->
                 <div class="one_half last alignright">
-                	<h4>Current Rate</h4>
-                    <h2>53%</h2>
+                	<h4>剩余空间</h4>
+                    <h2>199M</h2>
                 </div><!--one_half last-->
             </div><!--earnings-->
+
         </div><!--headerwidget-->
 
     </div><!--header-->
