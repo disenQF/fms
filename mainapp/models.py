@@ -101,8 +101,6 @@ class TMessage(models.Model):
         if self.create_time is None:
             self.create_time = datetime.now()
 
-        self.state = 0
-
         super(TMessage, self).save()
 
     class Meta:

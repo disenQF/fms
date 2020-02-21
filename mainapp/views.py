@@ -1,8 +1,10 @@
 import json
 
 from django.db.models import Q
+from django.http import JsonResponse
 from django.shortcuts import render, redirect
 from django.views import View
+from django.views.decorators.csrf import csrf_exempt
 
 from common import md5_
 from .models import TSysUser, TUser, TSysRole, TMessage
@@ -65,6 +67,7 @@ def logout(request):
     return redirect('/login/')
 
 
+@csrf_exempt
 def block_settings(request):
     block_default_size = request.POST.get('block_default_size', settings.DEFAULT_BLOCK_SIZE)
     friend_block_size = request.POST.get('friend_block_size', settings.FRIEND_BLOCK_SIZE)
@@ -72,6 +75,13 @@ def block_settings(request):
     if request.method == 'POST':
         settings.DEFAULT_BLOCK_SIZE = int(block_default_size)
         settings.FRIEND_BLOCK_SIZE = int(friend_block_size)
+
+    type_ = request.GET.get('type_', '')
+    if type_ == 'ajax':
+        return JsonResponse({
+            'block_default_size': block_default_size,
+            'friend_block_size': friend_block_size
+        })
 
     return render(request, 'settings.html', locals())
 
@@ -95,7 +105,6 @@ def role(request):
 
     roles = TSysRole.objects.all()
     return render(request, 'role/list.html', locals())
-
 
 def list_sys_user(request):
     action = request.GET.get('action', '')
@@ -178,3 +187,20 @@ class EditMessageView(View):
         errors = json.loads(form.errors.as_json())
         return render(request, 'message/edit.html', locals())
 
+
+class AuditMessage(View):
+    def get(self, request):
+        action = request.GET.get('action', '')
+        if action:
+            obj = TMessage.objects.get(pk=request.GET.get('id_'))
+            if action == 'yes':
+                obj.state = 1
+            elif action == 'no':
+                obj.state = 2
+                obj.note=request.GET.get('note', '')
+            obj.save()
+            obj.full_clean()
+
+
+        objs = TMessage.objects.filter(state=0).all()
+        return render(request, 'message/list_audit.html', locals())

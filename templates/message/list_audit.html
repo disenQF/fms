@@ -1,0 +1,110 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    审核公告信息
+{% endblock %}
+
+{% block css %}
+  <style>
+    #msg_info{
+        font-size: 1.2em;
+    }
+       #msg_info ul{
+           list-style: none;
+           border: 1px solid lightgray;
+           padding: 5px;
+           border-radius: 5px;
+       }
+
+       #msg_info li{
+           padding: 10px;
+           margin: 5px;
+           height: 320px;
+           background-color: white;
+       }
+
+       #msg_info li:hover{
+           background-color: lightcyan;
+           border-radius: 5px;
+       }
+
+      #msg_info ul::after{
+          content: "";
+          display: block;
+          overflow: auto;
+          clear: both;
+          height: 0;
+          visibility: hidden;
+      }
+    .bottom {
+        position: absolute;
+        bottom: 20px;
+    }
+    .box{
+        border: 1px solid lightblue;
+        width: 100%;
+        height: 240px;
+        overflow: scroll;
+        padding: 5px;
+    }
+
+  dt,dd{
+      padding: 5px;
+      font-size: 15px;
+  }
+  </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="centercontent tables">
+
+        <div class="pageheader notab">
+            <h1 class="pagetitle">当前位置：公告审核</h1>
+            <span class="pagedesc">审核公告信息</span>
+
+        </div><!--pageheader-->
+
+        <div style="margin: 10px" id="msg_info">
+            <div class="contenttitle2">
+                <h3>待审核-{{ objs|length }}条记录</h3>
+            </div><!--contenttitle-->
+            <ul>
+                 {% for obj in objs %}
+                     <li>
+                        <dl>
+                            <dt><b>公告标题：</b> <a style="cursor: pointer;" onclick="window.open('{{ obj.link_url }}')">{{ obj.title }}</a>
+                               <i>于 {{ obj.create_time|date:"Y-m-d H:i:s" }} 发布</i>
+                            </dt>
+
+                            <dd class="box">
+                                {{ obj.content|safe }}
+                            </dd>
+
+                            <dd>
+                                <button class="stdbtn btn_blue" onclick="window.open('/message_audit/?action=yes&id_={{ obj.message_id }}',target='_self')">通过</button>
+                                <button class="stdbtn btn_red" onclick="no_({{ obj.message_id }}, '{{ obj.title }}')">不通过</button>
+                            </dd>
+                        </dl>
+                     </li>
+                 {% endfor %}
+
+            </ul>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function no_(id_, name_) {
+            jPrompt( name_ + "未通过审核",'', '审核理由', function (msg) {
+               if(msg!=null){
+                   window.open('/message_audit/?action=no&id_='+id_+'&note='+msg, target='_self')
+               }
+            })
+        }
+
+    </script>
+{% endblock %}

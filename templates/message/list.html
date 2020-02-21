@@ -41,8 +41,13 @@
                         <td><a style="cursor: pointer" onclick="window.open('{{ obj.link_url }}')">查看连接</a></td>
                         <td ><span {% if obj.state == 2 %}onclick="jAlert('{{ obj.note }}', '提示')" style="cursor: pointer" {% endif %}>{{ obj.state_label }}</span></td>
                         <td class="center">
-                            <button class="stdbtn" onclick="edit_({{ obj.message_id }})">编辑</button>
-                            <button class="stdbtn btn_yellow" onclick="delete_({{ obj.message_id }}, '{{ obj.title }}')">删除</button>
+                             <button class="stdbtn" onclick="edit_({{ obj.message_id }})">{% if obj.state == 0 %}编辑{% else %}查看{% endif %}</button>
+
+                            {% if obj.state == 0 %}
+                                <button class="stdbtn btn_yellow" onclick="delete_({{ obj.message_id }}, '{{ obj.title }}')">删除</button>
+                            {% endif %}
+
+
                         </td>
                     </tr>
                 {% endfor %}
