@@ -1,0 +1,96 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    系统用户管理
+{% endblock %}
+
+{% block css %}
+    <script type="text/javascript" src="/s/js/custom/forms.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="centercontent tables">
+
+        <div class="pageheader notab">
+            <h1 class="pagetitle">当前位置：系统用户管理</h1>
+            <span class="pagedesc">用于管理普通管理员</span>
+
+        </div><!--pageheader-->
+
+        <div id="basicform " style="margin: 10px" class="messagebox">
+            <div class="contenttitle2">
+                <h3>{% if role_id %}编辑{% else %}新增{% endif %}系统用户</h3>
+            </div><!--contenttitle-->
+
+            {% if errors %}
+                <ul style="list-style: none;margin: 5px;padding: 5px;">
+
+                    {% for error in errors.values %}
+                        <li style="color:red"><span class="circle-dot-red"></span> {{ error.0.message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form class="stdform stdform2" method="post">
+
+                <p>
+                    <label>账号</label>
+                    <span class="field">
+                        {% csrf_token %}
+                        <input type="text" name="username" class="longinput {% if errors.username %}error{% endif %}"
+                               value="{% if obj %}{{ obj.username }}{% else %}{{ form.username.value }}{% endif %}"/>
+                         <input type="hidden" name="id" value="{{ id_ }}">
+                    </span>
+                </p>
+                <p>
+                    <label>昵称</label>
+                    <span class="field">
+                        {% csrf_token %}
+                        <input type="text" name="nick_name" class="longinput"
+                               value="{% if obj %}{{ obj.nick_name }}{% else %}{{ form.nick_name.value }}{% endif %}"/>
+                    </span>
+                </p>
+                <p>
+                    <label>口令</label>
+                    <span class="field">
+                        <input type="password" name="auth_string" class="longinput {% if errors.auth_string %}error{% endif %}"
+                               value="{% if obj %}{{ obj.auth_string }}{% else %}{{ form.auth_string.value }}{% endif %}"/>
+                    </span>
+                </p>
+                <p>
+                    <label>角色</label>
+                    <span class="field">
+                           <select name="role_id" class="uniformselect" style="opacity: 0;">
+                                <option value="">---请选择---</option>
+                               {% for role in roles %}
+                                   <option {% if obj.role_id == role.id or form.role_id == role.id %}selected{% endif %} value="{{ role.id }}">{{ role.name }}</option>
+                               {% endfor %}
+                            </select>
+                    </span>
+                </p>
+                <p class="stdformbutton">
+                    <button class="submit radius2">提交</button>
+
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_(role_id, role_name) {
+            jConfirm('是否确认删除' + role_name + "?", '删除确认', function (event) {
+                if (event) {
+                    url = '?action=del&role_id=' + role_id
+                    console.log(url)
+                    open(url, target = '_self')
+                }
+            })
+        }
+    </script>
+{% endblock %}

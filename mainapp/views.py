@@ -1,10 +1,13 @@
 import json
 
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.views import View
 
 from common import md5_
-from .models import TSysUser,TUser,TSysRole
+from .models import TSysUser, TUser, TSysRole
+
+
 
 # Create your views here.
 def login(request):
@@ -61,6 +64,7 @@ def logout(request):
     del request.session['login_user']
     return redirect('/login/')
 
+
 def index(request):
     return render(request, 'dashboard.html')
 
@@ -72,6 +76,16 @@ def role(request):
 
     roles = TSysRole.objects.all()
     return render(request, 'role/list.html', locals())
+
+
+def list_sys_user(request):
+    action = request.GET.get('action', '')
+    if action == 'del':
+        TSysUser.objects.get(pk=request.GET.get('id_')).delete()
+
+    # 查询系统时，除去超级管理员的用户
+    users = TSysUser.objects.filter(~Q(pk=request.session['login_user']['_id'])).all()
+    return render(request, 'sys_user/list.html', locals())
 
 
 class EditRoleView(View):
@@ -95,3 +109,30 @@ class EditRoleView(View):
 
         errors = json.loads(form.errors.as_json())
         return render(request, 'role/edit.html', locals())
+
+class EditSysUserView(View):
+    def get(self, request):
+        id_ = request.GET.get('id_', '')
+        if id_:
+            obj = TSysUser.objects.get(pk=id_)
+
+        roles = TSysRole.objects.filter(~Q(code='admin'))
+        return render(request, 'sys_user/edit.html', locals())
+
+    def post(self, request):
+        from .forms import SysUserForm
+        id_ = request.POST.get('id', '')
+        if id_:
+            form = SysUserForm(request.POST, instance=TSysUser.objects.get(pk=id_))
+        else:
+            form = SysUserForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/list_sysuser/')
+
+        errors = json.loads(form.errors.as_json())
+
+        roles = TSysRole.objects.filter(~Q(code='admin'))
+
+        return render(request, 'sys_user/edit.html', locals())

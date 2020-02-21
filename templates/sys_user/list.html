@@ -1,0 +1,73 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    系统用户管理
+{% endblock %}
+
+{% block content %}
+
+    <div class="centercontent tables">
+
+        <div class="pageheader notab">
+            <h1 class="pagetitle">当前位置：系统用户管理</h1>
+            <span class="pagedesc">用于管理普通管理员</span>
+
+        </div><!--pageheader-->
+
+        <div style="margin: 10px">
+            <div class="contenttitle2">
+                <h3>系统用户</h3>
+            </div><!--contenttitle-->
+            <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+                <thead>
+                <tr>
+                    <th class="head0">用户ID</th>
+                    <th class="head1">账号</th>
+                    <th class="head0">昵称</th>
+                    <th class="head1">角色</th>
+                    <th class="head0" style="width: 300px">操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for obj in users %}
+                    <tr class="gradeA">
+                        <td>{{ obj.id }}</td>
+                        <td>{{ obj.username }}</td>
+                        <td>{{ obj.nick_name }}</td>
+                        <td>{{ obj.role.name }}</td>
+                        <td class="center">
+                            <button class="stdbtn" onclick="edit_({{ obj.id }})">编辑</button>
+                            <button class="stdbtn btn_yellow" onclick="delete_({{ obj.id }}, '{{ obj.username }}')">删除</button>
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            <div style="padding: 5px">
+                <button class="stdbtn btn_blue" onclick="window.open('/edit_sysuser/', target='_self')">新增</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        function delete_(id_, name_) {
+            jConfirm('是否确认删除' + name_ + "?", '删除确认', function (event) {
+                if (event) {
+                    url = '?action=del&id_=' + id_
+                    console.log(url)
+                    window.open(url, target = '_self')
+                }
+            })
+        }
+
+        function edit_(id_){
+            open('/edit_sysuser/?id_='+id_, targt='_self')
+        }
+
+    </script>
+{% endblock %}
