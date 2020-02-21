@@ -6,9 +6,10 @@ from .models import TSysRole
 
 
 class RoleForm(forms.ModelForm):
+
     class Meta:
         model = TSysRole
-        fields = ['name', 'code']
+        fields = ['name', 'code']  # '__all__'
         error_messages = {
             'name': {
                 'required': '角色名不能为空'

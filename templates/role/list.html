@@ -4,7 +4,6 @@
     系统角色管理
 {% endblock %}
 
-
 {% block content %}
 
     <div class="centercontent tables">
@@ -59,7 +58,7 @@
                 if (event) {
                     url = '?action=del&role_id=' + role_id
                     console.log(url)
-                    open(url, target = '_self')
+                    window.open(url, target = '_self')
                 }
             })
         }

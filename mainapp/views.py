@@ -83,8 +83,7 @@ class EditRoleView(View):
 
     def post(self, request):
         from .forms import RoleForm
-        print(request.POST)
-        role_id = request.POST.get('id','')
+        role_id = request.POST.get('id', '')
         if role_id:
             form = RoleForm(request.POST, instance=TSysRole.objects.get(pk=role_id))
         else:

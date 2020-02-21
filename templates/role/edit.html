@@ -38,14 +38,14 @@
                     <label>角色名称</label>
                     <span class="field">
                         {% csrf_token %}
-                        <input type="text" name="name" class="longinput" value="{{ role.name }}"/>
+                        <input type="text" name="name" class="longinput" value="{% if role %}{{ role.name }}{% else %}{{ form.name.value }}{% endif %}"/>
                          <input type="hidden" name="id" value="{{ role_id }}">
                     </span>
                 </p>
                 <p>
                     <label>角色代码</label>
                     <span class="field">
-                        <input type="text" name="code" class="longinput" value="{{ role.code }}"/>
+                        <input type="text" name="code" class="longinput" value="{% if role %}{{ role.code }}{% else %}{{ form.code.value }}{% endif %}"/>
                     </span>
                 </p>
                 <p class="stdformbutton">
