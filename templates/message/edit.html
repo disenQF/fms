@@ -4,9 +4,6 @@
     公告信息管理
 {% endblock %}
 
-{% block css %}
-    <script type="text/javascript" src="/s/js/custom/forms.js"></script>
-{% endblock %}
 
 {% block content %}
 
@@ -43,22 +40,21 @@
                          <input type="hidden" name="id_" value="{{ id_ }}">
                     </span>
                 </p>
+
                 <p>
-                    <label>公告正文</label>
-                    <span class="field">
-                        <input type="text" name="content" class="longinput"
-                               value="{% if obj %}{{ obj.content }}{% else %}{{ form.content.value }}{% endif %}"/>
-                    </span>
-                </p>
-               <p>
                     <label>公告连接</label>
                     <span class="field">
                         <input type="text" name="link_url" class="longinput"
                                value="{% if obj %}{{ obj.link_url }}{% else %}{{ form.link_url.value }}{% endif %}"/>
                     </span>
                 </p>
+                <div id="id_info-wrapper">
+                    <textarea name="content">{% if obj %}{{ obj.content|safe }}{% else %}
+                        {{ form.content.value }}{% endif %}</textarea>
+                </div>
+
                 <p class="stdformbutton">
-                    <button class="submit radius2">提交</button>
+                    <button class="submit radius2">发布公告</button>
 
                 </p>
 
@@ -67,4 +63,15 @@
         </div>
     </div>
 
+{% endblock %}
+
+{% block js %}
+    <script>
+        tinyMCE.init({
+            mode: 'textareas',
+            width: '100%',
+            height: 400,
+            theme: 'advanced'
+        })
+    </script>
 {% endblock %}

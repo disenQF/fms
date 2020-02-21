@@ -82,14 +82,14 @@ class TMessage(models.Model):
 
     link_url = models.CharField(max_length=100, blank=True, null=True)
     create_time = models.DateTimeField(auto_created=True, blank=True)
+    note = models.TextField(blank=True, null=True)
 
     states = (
-        (0, '待审核'),
-        (1, '通过审核'),
-        (2, '未通过审核')
+        (0, '审核中'),
+        (1, '已通过'),
+        (2, '未通过')
     )
     state = models.IntegerField(choices=states, default=0)
-    note = models.TextField(blank=True, null=True)
 
     @property
     def state_label(self):
@@ -100,6 +100,8 @@ class TMessage(models.Model):
 
         if self.create_time is None:
             self.create_time = datetime.now()
+
+        self.state = 0
 
         super(TMessage, self).save()
 

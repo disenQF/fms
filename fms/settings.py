@@ -8,8 +8,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = '@!7@*b8u@(h_39+@r3kpro)j_4olx0teeg9z-5qv&)2x_0xb*='
 
-DEFAULT_BLOCK_SIZE = 200 # 单位是M， 默认空间大小
-FRIEND_BLOCK_SIZE = 20   # 单位是M,  推荐好友扩展空间大小
+DEFAULT_BLOCK_SIZE = 200  # 单位是M， 默认空间大小
+FRIEND_BLOCK_SIZE = 20  # 单位是M,  推荐好友扩展空间大小
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -28,6 +28,7 @@ INSTALLED_APPS = [
     'mainapp',
     'countapp',
     'msgapp',
+    'tinymce',
 ]
 
 MIDDLEWARE = [

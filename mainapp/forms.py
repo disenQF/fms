@@ -46,10 +46,10 @@ class MessageForm(forms.ModelForm):
             'title': {
                 'required': '标题不能为空'
             },
-            'content': {
-                'required': '内容不能为空'
-            },
             'link_url': {
                 'required': '外部连接不能为空'
+            },
+            'content':{
+                'required': '内容不能为空'
             }
         }
