@@ -2,7 +2,7 @@
 # coding: utf-8
 
 from django import forms
-from .models import TSysRole, TSysUser
+from .models import TSysRole, TSysUser, TMessage
 
 
 class RoleForm(forms.ModelForm):
@@ -33,5 +33,23 @@ class SysUserForm(forms.ModelForm):
             },
             'role_id': {
                 'required': '系统用户角色不能为空'
+            }
+        }
+
+
+class MessageForm(forms.ModelForm):
+
+    class Meta:
+        model = TMessage
+        fields = ['title', 'content', 'link_url', 'create_time']  # '__all__'
+        error_messages = {
+            'title': {
+                'required': '标题不能为空'
+            },
+            'content': {
+                'required': '内容不能为空'
+            },
+            'link_url': {
+                'required': '外部连接不能为空'
             }
         }

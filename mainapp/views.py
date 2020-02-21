@@ -5,9 +5,9 @@ from django.shortcuts import render, redirect
 from django.views import View
 
 from common import md5_
-from .models import TSysUser, TUser, TSysRole
+from .models import TSysUser, TUser, TSysRole, TMessage
 
-
+from fms import settings
 
 # Create your views here.
 def login(request):
@@ -65,8 +65,27 @@ def logout(request):
     return redirect('/login/')
 
 
+def block_settings(request):
+    block_default_size = request.POST.get('block_default_size', settings.DEFAULT_BLOCK_SIZE)
+    friend_block_size = request.POST.get('friend_block_size', settings.FRIEND_BLOCK_SIZE)
+
+    if request.method == 'POST':
+        settings.DEFAULT_BLOCK_SIZE = int(block_default_size)
+        settings.FRIEND_BLOCK_SIZE = int(friend_block_size)
+
+    return render(request, 'settings.html', locals())
+
 def index(request):
     return render(request, 'dashboard.html')
+
+
+def message(request):
+    objs = TMessage.objects.all()
+    action = request.GET.get('action', '')
+    if action == 'del':
+        TMessage.objects.get(pk=request.GET.get('id_')).delete()
+
+    return render(request, 'message/list.html', locals())
 
 
 def role(request):
@@ -86,7 +105,6 @@ def list_sys_user(request):
     # 查询系统时，除去超级管理员的用户
     users = TSysUser.objects.filter(~Q(pk=request.session['login_user']['_id'])).all()
     return render(request, 'sys_user/list.html', locals())
-
 
 class EditRoleView(View):
     def get(self, request):
@@ -136,3 +154,27 @@ class EditSysUserView(View):
         roles = TSysRole.objects.filter(~Q(code='admin'))
 
         return render(request, 'sys_user/edit.html', locals())
+
+class EditMessageView(View):
+    def get(self, request):
+        id_ = request.GET.get('id_', '')
+        if id_:
+            obj = TMessage.objects.get(pk=id_)
+
+        return render(request, 'message/edit.html', locals())
+
+    def post(self, request):
+        from .forms import MessageForm
+        id_ = request.POST.get('id_', '')
+        if id_:
+            form = MessageForm(request.POST, instance=TMessage.objects.get(pk=id_))
+        else:
+            form = MessageForm(request.POST)
+
+        if form.is_valid():
+            form.save()
+            return redirect('/message/')
+
+        errors = json.loads(form.errors.as_json())
+        return render(request, 'message/edit.html', locals())
+

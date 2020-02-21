@@ -1,0 +1,70 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    公告信息管理
+{% endblock %}
+
+{% block css %}
+    <script type="text/javascript" src="/s/js/custom/forms.js"></script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="centercontent tables">
+
+        <div class="pageheader notab">
+            <h1 class="pagetitle">当前位置：公告管理</h1>
+            <span class="pagedesc">用于管理公告信息的编辑和发布</span>
+
+        </div><!--pageheader-->
+
+        <div id="basicform " style="margin: 10px" class="messagebox">
+            <div class="contenttitle2">
+                <h3>{% if id_ %}编辑{% else %}新增{% endif %}公告信息</h3>
+            </div><!--contenttitle-->
+
+            {% if errors %}
+                <ul style="list-style: none;margin: 5px;padding: 5px;">
+
+                    {% for error in errors.values %}
+                        <li style="color:red"><span class="circle-dot-red"></span> {{ error.0.message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            <form class="stdform stdform2" method="post">
+
+                <p>
+                    <label>公告标题</label>
+                    <span class="field">
+                        {% csrf_token %}
+                        <input type="text" name="title" class="longinput {% if errors.title %}error{% endif %}"
+                               value="{% if obj %}{{ obj.title }}{% else %}{{ form.title.value }}{% endif %}"/>
+                         <input type="hidden" name="id_" value="{{ id_ }}">
+                    </span>
+                </p>
+                <p>
+                    <label>公告正文</label>
+                    <span class="field">
+                        <input type="text" name="content" class="longinput"
+                               value="{% if obj %}{{ obj.content }}{% else %}{{ form.content.value }}{% endif %}"/>
+                    </span>
+                </p>
+               <p>
+                    <label>公告连接</label>
+                    <span class="field">
+                        <input type="text" name="link_url" class="longinput"
+                               value="{% if obj %}{{ obj.link_url }}{% else %}{{ form.link_url.value }}{% endif %}"/>
+                    </span>
+                </p>
+                <p class="stdformbutton">
+                    <button class="submit radius2">提交</button>
+
+                </p>
+
+            </form>
+
+        </div>
+    </div>
+
+{% endblock %}
