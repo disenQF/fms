@@ -17,9 +17,11 @@
        }
 
        #msg_info li{
+           float: left;
            padding: 10px;
            margin: 5px;
            height: 320px;
+           width: 40%;
            background-color: white;
        }
 
@@ -74,8 +76,11 @@
                      <li>
                         <dl>
                             <dt><b>公告标题：</b> <a style="cursor: pointer;" onclick="window.open('{{ obj.link_url }}')">{{ obj.title }}</a>
-                               <i>于 {{ obj.create_time|date:"Y-m-d H:i:s" }} 发布</i>
+
                             </dt>
+                            <dd>
+                                 <i>于 {{ obj.create_time|date:"Y-m-d H:i:s" }} 发布</i>
+                            </dd>
 
                             <dd class="box">
                                 {{ obj.content|safe }}
@@ -83,7 +88,7 @@
 
                             <dd>
                                 <button class="stdbtn btn_blue" onclick="window.open('/message_audit/?action=yes&id_={{ obj.message_id }}',target='_self')">通过</button>
-                                <button class="stdbtn btn_red" onclick="no_({{ obj.message_id }}, '{{ obj.title }}')">不通过</button>
+                                <button class="stdbtn btn_red" onclick="javascript:not_({{ obj.message_id }}, '{{ obj.title }}');">不通过</button>
                             </dd>
                         </dl>
                      </li>
@@ -98,9 +103,10 @@
 
 {% block js %}
     <script>
-        function no_(id_, name_) {
+        function not_(id_, name_) {
             jPrompt( name_ + "未通过审核",'', '审核理由', function (msg) {
                if(msg!=null){
+                   window.open('/message_audit/?a
                    window.open('/message_audit/?action=no&id_='+id_+'&note='+msg, target='_self')
                }
             })

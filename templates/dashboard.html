@@ -14,8 +14,7 @@
             <span class="pagedesc">拥有自己的私有云文件平台, 释放自已！</span>
             <ul class="hornav">
                 {% if request.session.login_user.code == 'admin' or request.session.login_user.code == 'mgr' %}
-                    <li class="current"><a href="#check_msg">公告审核</a></li>
-                    <li><a href="#sys_settings">空间配置</a></li>
+                    <li class="current"><a href="#sys_settings">空间配置</a></li>
                 {% else %}
                     <li class="current"><a href="#near_dirs">最近使用目录</a></li>
                 {% endif %}
@@ -26,38 +25,35 @@
         <div id="contentwrapper" class="contentwrapper">
 
             {% if request.session.login_user.code == 'admin' or request.session.login_user.code == 'mgr' %}
-                <div id="check_msg" class="subcontent">
-                    <h3>待审核公告信息</h3>
-                </div>
 
                 <div id="sys_settings" class="subcontent" style="display: none">
-                    <form class="stdform stdform2" method="post">
+                    <form class="stdform stdform2">
 
-                <p>
-                    <label>用户默认空间</label>
-                    <span class="field">
+                        <p>
+                            <label>用户默认空间</label>
+                            <span class="field">
                         {% csrf_token %}
                         <input type="text" name="block_default_size" class="longinput"/>
                         <span style="margin-left: 10px"> 单位： M</span>
                     </span>
-                </p>
-                <p>
-                    <label>推荐好友扩展</label>
-                    <span class="field">
+                        </p>
+                        <p>
+                            <label>推荐好友扩展</label>
+                            <span class="field">
 
                         <input type="text" name="friend_block_size" class="longinput"/>
                         <span style="margin-left: 10px"> 单位： M</span>
                     </span>
-                </p>
-                <p class="stdformbutton">
-                    <button type="button" onclick="update_()" class="submit radius2">确认修改</button>
-                </p>
+                        </p>
+                        <p class="stdformbutton">
+                            <button type="button" onclick="update_()" class="submit radius2">确认修改</button>
+                        </p>
 
-            </form>
+                    </form>
                 </div>
             {% else %}
                 <div id="near_dirs" class="subcontent">
-                <h3>最近使用目录</h3>
+                    <h3>最近使用目录</h3>
                 </div>
             {% endif %}
 
@@ -72,25 +68,25 @@
 
 {% block js %}
     <script>
-        $ = jQuery.noConflict()
-        $(function(){
+        $ = jQuery.noConflict()  //当前页面中的$不存在的问题-其他的js占用
+        $(function () {
             $.ajax('/settings/', {
-                type:'get',
+                type: 'get',
                 data: 'type_=ajax',
-                success: function(msg){
+                success: function (msg) {
                     $('input[name="friend_block_size"]').val(msg.friend_block_size)
                     $('input[name="block_default_size"]').val(msg.block_default_size)
                 }
             })
         })
 
-        function update_(){
-            size1=  $('input[name="friend_block_size"]').val()
+        function update_() {
+            size1 = $('input[name="friend_block_size"]').val()
             size2 = $('input[name="block_default_size"]').val()
             $.ajax('/settings/', {
-                type:'post',
-                data: 'type_=ajax&friend_block_size='+size1+'&block_default_size='+size2,
-                success: function(msg){
+                type: 'post',
+                data: 'type_=ajax&friend_block_size=' + size1 + '&block_default_size=' + size2,
+                success: function (msg) {
                     jAlert('更新成功', '提示')
                 }
             })

@@ -9,8 +9,9 @@ class LoginMiddleware(MiddlewareMixin):
 
     no_filter_path = (
         '/login/',
-        '/logout/'
-        '/regist/'
+        '/logout/',
+        '/user/regist/',
+        '/user/code/'
     )
 
     def process_request(self, request: HttpRequest):

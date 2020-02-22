@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>注册会员</title>
+    {% include 'base/js.html' %}
+    {% include 'base/css.html' %}
+
+    <style>
+        #code_btn {
+            background-color: lightskyblue;
+            width: 120px;
+            height: 50px;
+            margin-left: 30px;
+        }
+
+        #code_btn:hover {
+            opacity: 0.8;
+        }
+
+    </style>
+</head>
+
+<body class="loginpage">
+<div class="loginbox">
+    <div class="loginboxinner">
+
+        <div class="logo">
+            <h1 class="logo">FMS新会员<span>注册页面</span></h1>
+        </div><!--logo-->
+
+        {% if error %}
+            <div class="loginmsg" style="color:lightcoral;">{{ error }}</div>
+        {% endif %}
+
+        <form method="post">
+            {% csrf_token %}
+            <div class="username">
+                <div class="usernameinner">
+                    <input type="text" name="phone" value="{{ phone }}" placeholder="请输入有效的手机号"/>
+                </div>
+            </div>
+            <div style="display: flex;flex-flow: row;align-items: center;height: 60px">
+                <div class="code" style="width: 220px">
+
+                    <div class="usernameinner">
+                        <input type="text" name="code" value="{{ code }}" placeholder="输入验证码"/>
+                    </div>
+                </div>
+                <button id="code_btn" type="button"  onclick="get_code(this)">获取验证码</button>
+            </div>
+
+            <div class="password">
+                <div class="passwordinner">
+                    <input type="password" name="password" value="{{ password }}" id="password"/>
+                </div>
+            </div>
+
+            <button>立即加入</button>
+
+        </form>
+
+    </div><!--loginboxinner-->
+</div><!--loginbox-->
+
+<script>
+    function get_code(btn) {
+
+        $ = jQuery.noConflict()
+
+        phone = $('input[name="phone"]').val()
+        if (phone == null || phone.trim().length == 0) {
+            // http://www.jqueryfuns.com/resource/view/2412 文档
+            $.toast({
+                heading: 'Warning',
+                text: '短信验证码发送成功',
+                icon: 'warning',
+                showHideTransition: 'slide',
+                loader: false,//是否显示加载条
+                position: 'top-center'
+            })
+            return
+        }
+
+        $.getJSON('/user/code/?phone=' + phone, function (msg) {
+            $.toast({
+                heading: 'Success',
+                text: '短信验证码发送成功',
+                icon: 'success',
+                position: 'top-center'
+            })
+        });
+
+        // jQuery(dom) 将dom节点对象转成jQuery对象，再调用jQuery对象的方法
+        $(btn).attr('style', 'background-color:lightgray') //增加标签属性
+        $(btn).attr('disabled', 'disabled')
+
+        var n = 20;
+        var interval_id = setInterval(function () {
+            n--
+
+            $(btn).text('等待 ' + n + ' 秒')
+
+            if (n == 0) {
+                clearInterval(interval_id);  // 停止定时器
+                $(btn).removeAttr('style')  // 删除标签属性
+                $(btn).removeAttr('disabled')
+                $(btn).text('获取验证码')
+            }
+        }, 1000)
+    }
+</script>
+
+</body>
+</html>

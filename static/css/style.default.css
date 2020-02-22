@@ -95,17 +95,21 @@ body.withmenucoll2 { background-position: 35px 0; } /* with menu style 2 in coll
 
 .loginpage { background: #fff url(../images/patternbg.png); }
 .loginbox { 
-	width: 350px; padding: 5px; background: #fff; margin: 7% auto 0 auto; -moz-border-radius: 2px; -webkit-border-radius: 2px;
+	width: 400px; padding: 5px; background: #fff; margin: 7% auto 0 auto; -moz-border-radius: 2px; -webkit-border-radius: 2px;
 	border-radius: 2px; -moz-box-shadow: 0 0 2px rgba(0,0,0,0.3); -webkit-box-shadow: 0 0 2px rgba(0,0,0,0.3); 
 	box-shadow: 0 0 2px rgba(0,0,0,0.3);
 }
 .loginboxinner { 
-	padding: 20px; background: #32415a url(../images/patternbg.png); -moz-border-radius: 0 2px 2px 0; 
-	-webkit-border-radius: 0 0 2px 2px; border-radius: 0 0 2px 2px;
+	padding: 20px;
+	background: #32415a url(../images/patternbg.png);
+	-moz-border-radius: 0 2px 2px 0;
+	-webkit-border-radius: 0 0 2px 2px;
+	border-radius: 0 0 2px 2px;
 }
 .loginbox .logo { text-align: center; }
 .loginbox .logo h1 { 
-	font-family: 'RobotoCondensed', Arial, Helvetica, sans-serif; font-size: 32px; color: #fff; border-bottom: 1px solid #56647d; 
+	font-family: 'RobotoCondensed', Arial, Helvetica, sans-serif;
+	font-size: 32px; color: #fff; border-bottom: 1px solid #56647d;
 	line-height: normal; margin-bottom: 5px;
 }
 .loginbox .logo h1 span { color: #FB9337; }
@@ -117,8 +121,20 @@ body.withmenucoll2 { background-position: 35px 0; } /* with menu style 2 in coll
 	border-radius: 2px; -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4); -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4); 
 	box-shadow: 0 1px 2px rgba(0,0,0,0.4); margin: 20px 0;
 }
+
+.loginbox .code {
+	background: #eee url(../images/icons/info.png) no-repeat 13px center;
+	-moz-border-radius: 2px; -webkit-border-radius: 2px;
+	border-radius: 2px;
+	-moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	-webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	box-shadow: 0 1px 2px rgba(0,0,0,0.4);
+	margin: 20px 0;
+}
+
 .loginbox .usernameinner { 
-	margin-left: 45px; border-left: 1px solid #ddd; background: #fff; padding-right: 20px; 
+	margin-left: 45px; border-left: 1px solid #ddd;
+	background: #fff; padding-right: 20px;
 	-moz-border-radius: 2px; -webkit-border-radius: 2px; border-radius: 2px; 
 }
 .loginbox .username input { 
@@ -126,6 +142,16 @@ body.withmenucoll2 { background-position: 35px 0; } /* with menu style 2 in coll
 	font-family: 'RobotoCondensed', Arial, Helvetica, sans-serif; -moz-border-radius: 0 2px 2px 0; -webkit-border-radius: 0 2px 2px 0;
 	border-radius: 0 2px 2px 0;
 }
+
+.loginbox .code input {
+	padding: 15px 10px; border: 0;
+	font-size: 14px; width: 100%;
+	box-shadow: none; color: #666;
+	font-family: 'RobotoCondensed', Arial, Helvetica, sans-serif;
+	-moz-border-radius: 0 2px 2px 0; -webkit-border-radius: 0 2px 2px 0;
+	border-radius: 0 2px 2px 0;
+}
+
 .loginbox .password { 
 	background: #eee url(../images/icons/password.png) no-repeat 13px center; -moz-border-radius: 2px; -webkit-border-radius: 2px; 
 	border-radius: 2px; -moz-box-shadow: 0 1px 2px rgba(0,0,0,0.4); -webkit-box-shadow: 0 1px 2px rgba(0,0,0,0.4); 

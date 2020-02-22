@@ -41,7 +41,7 @@ def login(request):
             }
 
         else:
-            login_user = TUser.objects.filter(name=username, auth_string=password).first()
+            login_user = TUser.objects.filter((Q(name=username) or Q(phone=username)) and Q(auth_string=password)).first()
             if login_user:
                 # 会员
                 login_info = {
@@ -199,8 +199,7 @@ class AuditMessage(View):
                 obj.state = 2
                 obj.note=request.GET.get('note', '')
             obj.save()
-            obj.full_clean()
-
+            obj.full_clean()  # 将这个持久化对像清除， 如果不清除话，则会影响下一行的查询结果
 
         objs = TMessage.objects.filter(state=0).all()
         return render(request, 'message/list_audit.html', locals())
