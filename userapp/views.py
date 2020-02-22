@@ -6,6 +6,7 @@ from django.views import View
 from common import cache_, alisms_
 from .models import TUser
 
+
 class RegistView(View):
     def get(self, request):
         return render(request, 'regist.html')
@@ -25,10 +26,10 @@ class RegistView(View):
                 user = TUser(phone=phone, auth_string=password)
                 user.save()
 
-                request.session['login_user']={
+                request.session['login_user'] = {
                     '_id': user.user_id,
                     'name': user.phone,
-                    'code': ''
+                    'code': '' # 角色的code，不设置但必须是空字符串
                 }
 
                 return redirect('/')
@@ -37,9 +38,9 @@ class RegistView(View):
 
 
 def send_code(request):
-    phone = request.GET.get('phone','')
+    phone = request.GET.get('phone', '')
     if phone:
-        code = cache_.new_code(phone) # 生成新的code
+        code = cache_.new_code(phone)  # 生成新的code
         # 发送验证码短信
         alisms_.send_code(phone, code)
         return JsonResponse({
