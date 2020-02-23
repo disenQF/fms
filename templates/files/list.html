@@ -1,0 +1,212 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+    文件和目录管理
+{% endblock %}
+
+{% block css %}
+    <style>
+        .pre_files {
+            font-size: 14px;
+            color: #23324b;
+            border-bottom: 1px double lightgray;
+            margin: 0px 0px 2px;
+            padding: 5px;
+            background-color: lightcyan;
+        }
+
+        .pre_files .pre_file_name {
+            background-color: lightblue;
+            padding: 5px;
+            border-radius: 5px;
+        }
+    </style>
+{% endblock %}
+
+{% block content %}
+
+    <div class="centercontent tables">
+
+        <div class="pageheader notab">
+            <h1 class="pagetitle">当前位置：文件管理</h1>
+            <span class="pagedesc">创建目录、打开目录和上传文件及删除目录和文件</span>
+
+        </div><!--pageheader-->
+
+        <div style="margin: 10px">
+            <div class="contenttitle2">
+                <h3>文件管理</h3>
+            </div><!--contenttitle-->
+            <div class="pre_files">
+                <span>文件目录: </span>
+                {% for f_id, f_name in pre_file_stack %}
+                    {% if forloop.counter < pre_file_stack|length %}
+                        <span class="pre_file_name"><a
+                                href="/user/files/?current_file_id={{ f_id }}&current_file_name={{ f_name }}">{{ f_name }}</a></span>
+                        &nbsp;&gt;&gt;&nbsp;
+                    {% else %}
+                        <span style="color: blue">{{ f_name }}</span>
+                    {% endif %}
+                {% endfor %}
+            </div>
+            <div style="margin: 5px">
+
+                <button class="stdbtn btn_blue" onclick="create_dir()">创建目录</button>
+                <button class="stdbtn btn_yellow" onclick="upload_file.click()">上传文件</button>
+                <input type="file" id="upload_file" style="display: none;" onchange="upload_(this.files[0])">
+                {% if pre_file_stack|length > 1 %}
+                    <button class="stdbtn btn_blank" onclick="prefiles()">返回上级目录</button>
+                {% endif %}
+            </div>
+
+
+            <table cellpadding="0" cellspacing="0" border="0" class="stdtable">
+                <thead>
+                <tr>
+                    <th class="head0">
+                        <input type="checkbox" id="check_all">
+                    </th>
+                    <th class="head0">文件名</th>
+                    <th class="head1">文件类型</th>
+                    <th class="head0">文件大小</th>
+                    <th class="head0">创建时间</th>
+                    <th class="head1" style="width: 300px">操作</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for obj in files %}
+                    <tr class="gradeA">
+                        <td><input type="checkbox" value="{{ obj.file_id }}"></td>
+                        <td>
+                            {% if obj.file_type == 0 %}
+                                <a href="/user/files/?current_file_id={{ obj.file_id }}&current_file_name={{ obj.file_name }}">{{ obj.file_name }}</a>
+                            {% else %}
+                                {{ obj.file_name }}
+                            {% endif %}
+
+                        </td>
+                        <td>{{ obj.type_name }}</td>
+                        <td>{% if obj.file_size != 0 %}{{ obj.file_size|filesizeformat }}{% endif %}</td>
+                        <td>{{ obj.create_time }}</td>
+                        <td class="center">
+                            <button class="stdbtn" onclick="rename_file({{ obj.file_id }}, '{{ obj.file_name }}')">重命名
+                            </button>
+                            <button class="stdbtn btn_yellow"
+                                    onclick="delete_({{ obj.file_id }}, '{{ obj.file_name }}')">删除
+                            </button>
+                            {% if obj.file_type != 0 %}
+                                <button class="stdbtn btn_blue" onclick="download({{ obj.file_id }})">下载文件</button>
+                            {% endif %}
+
+                            {% if obj.file_type == 1 %}
+                                <button class="stdbtn btn_blue" onclick="create_img_link({{ obj.file_id }})">生成连接
+                                </button>
+                            {% endif %}
+                        </td>
+                    </tr>
+                {% endfor %}
+
+                </tbody>
+            </table>
+            <div style="padding: 5px">
+
+                <button class="stdbtn btn_red">批量删除</button>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block js %}
+    <script>
+        $ = jQuery
+
+        function create_dir() {
+            jPrompt('输入目录名称', '', '创建目录', function (dir_name) {
+                    if (dir_name != null) {
+                        $.post('/user/files/', {
+                            action: 'new_dir',
+                            current_file_id: {{ current_file_id }},
+                            current_file_name: '{{ current_file_name }}',
+                            dir_name: dir_name
+                        }, function (msg) {
+                            window.open(msg.url, '_self')
+                        })
+                    }
+                }
+            )
+        }
+
+        function delete_(id_, name_) {
+            jConfirm('是否确认删除' + name_ + "?", '删除确认', function (event) {
+                if (event) {
+                    $.post('/user/files/', {
+                        action: 'del',
+                        current_file_id: {{ current_file_id }},
+                        current_file_name: '{{ current_file_name }}',
+                        file_id: id_
+                    }, function (msg) {
+                        window.open(msg.url, '_self')
+                    })
+                }
+            })
+        }
+
+        function rename_file(id_, name_) {
+            jPrompt('输入新的目录名称', name_, '修改目录名', function (dir_name) {
+                    if (dir_name != null && dir_name != name_) {
+                        $.post('/user/files/', {
+                            action: 'rename',
+                            file_id: id_,
+                            current_file_id: {{ current_file_id }},
+                            current_file_name: '{{ current_file_name }}',
+                            dir_name: dir_name
+                        }, function (msg) {
+                            window.open(msg.url, '_self')
+                        })
+                    }
+                }
+            )
+        }
+
+        function prefiles() {
+            $.post('/user/files/', {
+                action: 'prefiles'
+            }, function (msg) {
+                window.open(msg.url, '_self')
+            })
+        }
+
+        function upload_(file) {
+            jAlert('你是确定上传' + file.name + "?", '提示', function (msg) {
+                if (msg) {
+                    var formdata = new FormData()
+                    formdata.append('current_file_id', '{{ current_file_id }}')
+                    formdata.append('current_file_name', '{{ current_file_name }}')
+                    formdata.append('action', 'upload')
+                    formdata.append('file', file)
+
+                    $.ajax('/user/files/', {
+                        type: 'post',
+                        data: formdata,
+                        contentType: false,
+                        processData: false,
+                        success: function (data) {
+                            window.open(data.url, '_self')
+                        }
+                    })
+                }
+            })
+        }
+
+        function download(file_id) {
+            window.open('/user/download/?file_id=' + file_id, '_self')
+        }
+
+        function create_img_link(file_id) {
+            window.open('/user/create_img_link/?file_id=' + file_id, '_self')
+        }
+
+    </script>
+{% endblock %}

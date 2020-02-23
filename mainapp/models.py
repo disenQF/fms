@@ -11,6 +11,8 @@ from django.db import models
 
 from common import md5_
 
+from common import file_types
+
 
 class TBlockSetting(models.Model):
     block_id = models.IntegerField(primary_key=True)
@@ -25,19 +27,34 @@ class TBlockSetting(models.Model):
 
 
 class TFile(models.Model):
+    # file_mimes = ('图片', '文本', 'pdf', 'word', 'excel', '压缩包', '其它')
+
     file_id = models.AutoField(primary_key=True)
     user = models.ForeignKey('TUser', models.DO_NOTHING, blank=True, null=True)
-    file_type = models.CharField(max_length=1, blank=True, null=True)
-    fille_name = models.CharField(max_length=50, blank=True, null=True)
+    file_type = models.IntegerField(choices=file_types, default=0)
+    file_name = models.CharField(max_length=50, blank=True, null=True)
     create_time = models.DateTimeField(blank=True, null=True)
     last_time = models.DateTimeField(blank=True, null=True)
-    file_size = models.FloatField(blank=True, null=True)
+    file_path = models.CharField(max_length=200, blank=True, null=True)
+    file_size = models.FloatField(default=0)
     parent_file_id = models.IntegerField(blank=True, null=True)
     note = models.TextField(blank=True, null=True)
+
+    @property
+    def type_name(self):
+        return file_types[self.file_type][-1]
+
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        if not self.create_time:
+            self.create_time = datetime.now()
+
+        super(TFile, self).save()
 
     class Meta:
         managed = False
         db_table = 't_file'
+        ordering = ['-create_time']
 
 
 class TGroom(models.Model):
