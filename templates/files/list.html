@@ -41,8 +41,8 @@
                 <span>文件目录: </span>
                 {% for f_id, f_name in pre_file_stack %}
                     {% if forloop.counter < pre_file_stack|length %}
-                        <span class="pre_file_name"><a
-                                href="/user/files/?current_file_id={{ f_id }}&current_file_name={{ f_name }}">{{ f_name }}</a></span>
+                        <span class="pre_file_name">
+                            <a href="/user/files/?current_file_id={{ f_id }}&current_file_name={{ f_name }}">{{ f_name }}</a></span>
                         &nbsp;&gt;&gt;&nbsp;
                     {% else %}
                         <span style="color: blue">{{ f_name }}</span>

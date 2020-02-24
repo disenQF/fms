@@ -61,16 +61,18 @@ class RegistView(View):
 
 class FileView(View):
     def get(self, request):
+        user_id = request.session['login_user']['_id']  # 当前会话的用户ID
+
         current_file_id = int(request.GET.get('current_file_id', 0))
         current_file_name = request.GET.get('current_file_name', '根')
 
         if current_file_id == 0:
-            files_stack.clear_pre_file_stack()
+            files_stack.clear_pre_file_stack(user_id)
 
-        files_stack.add_file_stack(current_file_id, current_file_name)
+        files_stack.add_file_stack(user_id, current_file_id, current_file_name)
 
-        pre_file_stack = files_stack.get_pre_file_stack()
-        files = TFile.objects.filter(parent_file_id=current_file_id)
+        pre_file_stack = files_stack.get_pre_file_stack(user_id)
+        files = TFile.objects.filter(parent_file_id=current_file_id, user_id=user_id)
         return render(request, 'files/list.html', locals())
 
     def update_file_path(self, file_id, old_file_path, new_file_path):
@@ -92,13 +94,10 @@ class FileView(View):
 
         action = request.POST.get('action', '')
         if action and action == 'new_dir':
-            # user = TUser.objects.get(pk=request.session['login_user']['_id'])
-
-            dir_path = settings.SAVE_ROOT_PATH + f"-{user_id}" + (
-                "/" + current_file_name if current_file_name != '根' else '')
+            save_dir = self.get_dir_path(current_file_id, user_id)
 
             file_name = request.POST.get('dir_name')
-            file_path = os.path.join(dir_path, file_name)
+            file_path = os.path.join(save_dir, file_name)
 
             file = TFile(file_name=file_name,
                          file_path=file_path,
@@ -106,6 +105,7 @@ class FileView(View):
                          user_id=user_id)
             file.save()
             os.makedirs(file_path)  # 服务器创建目录
+            # os.mkdir()
 
         if action and action == 'del':
             # 删除这个文件下的所有子目录和文件
@@ -134,19 +134,14 @@ class FileView(View):
                 self.update_file_path(file.file_id, old_file_path, new_file_path)
 
         if action and action == 'prefiles':
-            current_file_id, current_file_name = files_stack.pop_file_stack()
+            current_file_id, current_file_name = files_stack.pop_file_stack(user_id)
 
         if action and action == 'upload':
             print('文件上传')
 
             upload_file: UploadedFile = request.FILES.get('file')
             # 判断当前目录是否为根路径
-            if not current_file_id:
-                save_dir = settings.SAVE_ROOT_PATH + f'-{user_id}'
-                os.makedirs(save_dir)
-            else:
-                save_dir = TFile.objects.get(pk=current_file_id).file_path
-
+            save_dir = self.get_dir_path(current_file_id, user_id)
             save_file_path = os.path.join(save_dir, upload_file.name)
 
             TFile.objects.create(file_name=upload_file.name,
@@ -164,8 +159,17 @@ class FileView(View):
             'url': '/user/files/?current_file_id=' + str(current_file_id) + "&current_file_name=" + current_file_name
         })
 
+    def get_dir_path(self, current_file_id, user_id):
+        if not current_file_id:
+            save_dir = settings.SAVE_ROOT_PATH + f'-{user_id}'
+            if not os.path.exists(save_dir):
+                os.makedirs(save_dir)
+        else:
+            save_dir = TFile.objects.get(pk=current_file_id).file_path
+        return save_dir
 
-def download(request):
+
+def download(request):  # 动态资源
     # 下载文件
     from urllib.parse import quote
 
@@ -175,6 +179,8 @@ def download(request):
         bytes = f.read()
 
     resp = HttpResponse(content=bytes, content_type='application/octet-stream', charset='utf-8')
+
+    # 设置响应头
     resp.setdefault('Content-Disposition', 'attachment;filename=' + quote(file.file_name, encoding='utf-8'))
     resp.setdefault('Content-Length', file.file_size)
 
