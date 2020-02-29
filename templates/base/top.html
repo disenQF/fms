@@ -16,14 +16,14 @@
 
         <div class="right">
             <div class="userinfo">
-            	<img id="head_small" src="{% if request.session.login_user.head %}/m/{{ request.session.login_user.head }}{% else %}/s/images/thumbs/avatar.png{% endif %}" alt="" />
+            	<img id="head_small" src="{% if request.session.login_user.head %}/m/{{ request.session.login_user.head }}{% else %}/static/images/thumbs/avatar.png{% endif %}" alt="" />
                 <span>{{ request.session.login_user.name }}</span>
             </div><!--userinfo-->
 
             <div class="userinfodrop">
             	<div class="avatar">
                 	<a href="">
-                        <img id="head_big" src="{% if request.session.login_user.head %}/m/{{ request.session.login_user.head }}{% else %}/s/images/thumbs/avatarbig.png{% endif %}" alt="" />
+                        <img id="head_big" src="{% if request.session.login_user.head %}/media/{{ request.session.login_user.head }}{% else %}/s/images/thumbs/avatarbig.png{% endif %}" alt="" />
                     </a>
                     <div class="changetheme">
                     	切换主题: <br />

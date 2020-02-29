@@ -3,9 +3,10 @@
 {% block title %}
     系统配置
 {% endblock %}
+{% load static %}
 
 {% block css %}
-    <script type="text/javascript" src="/s/js/custom/forms.js"></script>
+    <script type="text/javascript" src="{% static 'js/custom/forms.js' %}"></script>
 {% endblock %}
 
 {% block content %}
