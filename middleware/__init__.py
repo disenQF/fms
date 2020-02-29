@@ -15,9 +15,10 @@ class LoginMiddleware(MiddlewareMixin):
     )
 
     def process_request(self, request: HttpRequest):
-        if any((request.path not in self.no_filter_path,
-                not request.path.startswith('/s/'),
-                not request.path.startswith('/m/'))):
+        if request.path.startswith('/s/') or request.path.startswith('/m/'):
+            return
+
+        if request.path not in self.no_filter_path:
             # 验证当前会话是否已登录
             if not request.session.get('login_user', None):
                 return redirect('/login/')
