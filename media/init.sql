@@ -4,6 +4,50 @@ create DATABASE fms CHARSET=utf8;
 use fms;
 
 
+-- 系统管理员表（超级管理员、普通员管理员、合作商超级管理员）
+
+create table t_sys_role(
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(20) NOT NULL UNIQUE,
+  code VARCHAR(10) UNIQUE
+);
+
+INSERT t_sys_role(name, code) values
+  ('超级管理员', 'admin'),
+  ('普通管理员', 'mgr'),
+  ('合作商超级管理员', 'fr_admin');
+
+create table t_sys_user(
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  username VARCHAR(20) UNIQUE NOT NULL ,
+  auth_string VARCHAR(32) NOT NULL,
+  nick_name  VARCHAR(20),
+  role_id    INTEGER REFERENCES t_sys_role(id)
+);
+
+INSERT t_sys_user(username, auth_string, nick_name, role_id) VALUES
+  ('disen', '43da3eb40a39ddea8d5eb2da915adb09','狄哥', 1),
+  ('lili', '8e056ea961370ab19d07993abbb14e73', '小李子', 2);
+
+
+-- 不同角色有自己的菜单
+create table t_sys_menu(
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  name VARCHAR(20),
+  parent_id INTEGER REFERENCES t_sys_menu(id),
+  ord INT COMMENT '菜单显示的排序',
+  url VARCHAR(50) COMMENT '菜单的连接'
+);
+
+
+-- 角色和菜单关系表
+CREATE TABLE t_sys_role_menu (
+  id INTEGER PRIMARY KEY AUTO_INCREMENT,
+  role_id INTEGER REFERENCES t_sys_role(id),
+  menu_id INTEGER REFERENCES t_sys_menu(id)
+);
+
+
 /*==============================================================*/
 /* DBMS name:      MySQL 5.0                                    */
 /* Created on:     2020/2/19 21:09:12                           */

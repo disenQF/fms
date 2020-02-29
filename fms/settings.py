@@ -63,7 +63,7 @@ WSGI_APPLICATION = 'fms.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': '119.3.170.97',
+        'HOST': '47.105.137.19',
         'PORT': 3307,
         'USER': 'root',
         'PASSWORD': 'root',
