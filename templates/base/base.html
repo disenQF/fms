@@ -33,9 +33,19 @@
     {% endblock %}
 
 </div><!--bodywrapper-->
+
 {% block js %}
 
 {% endblock %}
+<script>
+    jQuery('#role_menu').toggle()
+    const href = jQuery('#left_menu a').each(function () {
+        const url = jQuery(this).attr('href')
+        if(url == '{{ request.path }}'){
+            jQuery(this).parents('li').addClass('current')
+        }
+    })
+</script>
 
 </body>
 </html>

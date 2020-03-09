@@ -14,7 +14,8 @@
             <span class="pagedesc">拥有自己的私有云文件平台, 释放自已！</span>
             <ul class="hornav">
                 {% if request.session.login_user.code == 'admin' or request.session.login_user.code == 'mgr' %}
-                    <li class="current"><a href="#sys_settings">空间配置</a></li>
+                    <li class="current"><a href="#block_cnt">空间统计</a></li>
+                    <li><a href="#user_cnt">用户统计</a></li>
                 {% else %}
                     <li class="current"><a href="#near_dirs">最近使用目录</a></li>
                 {% endif %}
@@ -26,30 +27,11 @@
 
             {% if request.session.login_user.code == 'admin' or request.session.login_user.code == 'mgr' %}
 
-                <div id="sys_settings" class="subcontent" style="display: none">
-                    <form class="stdform stdform2">
-
-                        <p>
-                            <label>用户默认空间</label>
-                            <span class="field">
-                        {% csrf_token %}
-                        <input type="text" name="block_default_size" class="longinput"/>
-                        <span style="margin-left: 10px"> 单位： M</span>
-                    </span>
-                        </p>
-                        <p>
-                            <label>推荐好友扩展</label>
-                            <span class="field">
-
-                        <input type="text" name="friend_block_size" class="longinput"/>
-                        <span style="margin-left: 10px"> 单位： M</span>
-                    </span>
-                        </p>
-                        <p class="stdformbutton">
-                            <button type="button" onclick="update_()" class="submit radius2">确认修改</button>
-                        </p>
-
-                    </form>
+                <div id="block_cnt" class="subcontent" style="display: none">
+                    <div id="main_block" style="width: 600px;height:400px;"></div>
+                </div>
+                <div id="user_cnt" class="subcontent" style="display: none">
+                    <div id="main_user" style="width: 600px;height:400px;"></div>
                 </div>
             {% else %}
                 <div id="near_dirs" class="subcontent">
@@ -69,28 +51,92 @@
 {% block js %}
     <script>
         $ = jQuery.noConflict()  //当前页面中的$不存在的问题-其他的js占用
-        $(function () {
-            $.ajax('/settings/', {
-                type: 'get',
-                data: 'type_=ajax',
-                success: function (msg) {
-                    $('input[name="friend_block_size"]').val(msg.friend_block_size)
-                    $('input[name="block_default_size"]').val(msg.block_default_size)
-                }
-            })
+        $('#block_cnt').show()
+
+        $.getJSON('/counter/block/', function (data) {
+            const myChart = echarts.init(document.getElementById('main_block'));
+            console.log(data)
+            // 指定图表的配置项和数据
+            const option = {
+                title: {
+                    text: '每月已用空间'
+                },
+                tooltip: {},
+                legend: {
+                    data: ['空间']
+                },
+                xAxis: {
+                    data: data.data.month,
+
+                },
+                yAxis: {
+                    name: '字节',
+                    min: 0,
+                    max: 1500,
+                    interval: 100,
+                    axisLabel: {
+                        formatter: '{value} K'
+                    }
+                },
+                series: [{
+                    name: '空间',
+                    type: 'bar',
+                    data: data.data.values
+                },
+                    {
+                        data: data.data.values,
+                        type: 'line',
+                        smooth: true
+                    }]
+            };
+
+            // 使用刚指定的配置项和数据显示图表。
+            console.info(option)
+            myChart.setOption(option);
         })
 
-        function update_() {
-            size1 = $('input[name="friend_block_size"]').val()
-            size2 = $('input[name="block_default_size"]').val()
-            $.ajax('/settings/', {
-                type: 'post',
-                data: 'type_=ajax&friend_block_size=' + size1 + '&block_default_size=' + size2,
-                success: function (msg) {
-                    jAlert('更新成功', '提示')
-                }
-            })
-        }
+        $.getJSON('/counter/user/', function (data) {
+            const myChart = echarts.init(document.getElementById('main_user'));
+            const option = {
+                title: {
+                    text: '用户量统计',
+                    subtext: '近期用户注册量',
+                    left: 'center'
+                },
+                tooltip: {
+                    trigger: 'item',
+                    formatter: '{b} : {c}人'
+                },
+                legend: {
+                    type: 'scroll',
+                    orient: 'vertical',
+                    right: 10,
+                    top: 20,
+                    bottom: 20,
+                    data: data.data.month
+                },
+                series: [
+                    {
+                        name: '增涨量',
+                        type: 'pie',
+                        radius: '55%',
+                        center: ['40%', '50%'],
+                        data: data.data.values,
+                        emphasis: {
+                            itemStyle: {
+                                shadowBlur: 10,
+                                shadowOffsetX: 0,
+                                shadowColor: 'rgba(0, 0, 0, 0.5)'
+                            }
+                        }
+                    }
+                ]
+            };
+
+            myChart.setOption(option);
+        })
+
+
     </script>
 {% endblock %}
 

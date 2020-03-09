@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'userapp',
     'mainapp',
+    'countapp',
     'tinymce',
 ]
 
