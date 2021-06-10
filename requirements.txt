@@ -1,5 +1,5 @@
 aliyun-python-sdk-core==2.13.14
-Django==2.0.1
+Django==2.2.24
 django-redis==4.11.0
 django-tinymce==2.8.0
 gunicorn==20.0.4
